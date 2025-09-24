@@ -1,19 +1,70 @@
-Okay, here's a short description summarizing what we did to create the Clap App:
+# Android ClapApp 🎵📱
 
-Objective: Build an Android app that simulates a "clap" by detecting when a hand moves close to the phone's front sensor.
+An Android app that detects a “clap” (or more precisely, a transition of a hand near the front of the device) using the proximity sensor, then provides feedback via sound, vibration, and UI changes.
 
-Sensor Usage: We accessed the device's SensorManager and specifically registered a listener for the Sensor.TYPE_PROXIMITY.
+---
 
-Clap Detection Logic: Inside the onSensorChanged listener callback, we monitored the proximity sensor's value. A "clap" was registered only when the value transitioned from a "far" state (higher value) to a "near" state (typically 0.0 cm), preventing continuous triggers.
+## 🧾 Table of Contents
 
-Feedback Implementation: Upon detecting the clap transition:
+- [About the App](#about-the-app)  
+- [Features & Behaviour](#features--behaviour)  
+- [Architecture & Design](#architecture--design)  
+- [How It Works](#how-it-works)  
+- [Setup & Build Instructions](#setup--build-instructions)  
+- [Permissions](#permissions)  
+- [Project Structure](#project-structure)  
+- [Contributors](#contributors)  
+- [License](#license)  
 
-Played a pre-loaded sound effect using SoundPool for low latency.
+---
 
-Triggered a short vibration using Vibrator (required adding the VIBRATE permission to the AndroidManifest.xml).
+## About the App
 
-Updated the Jetpack Compose UI by changing an Image resource, using MutableState for reactivity and a Coroutine (lifecycleScope.launch with delay) to revert the image after a short pause.
+This app demonstrates usage of the **proximity sensor** to detect a “clap-like” trigger—by observing a quick transition from “far” to “near.” Upon detection, it plays a short sound effect, vibrates briefly, and updates the on-screen UI to give visual feedback.
 
-UI (Jetpack Compose): We built the user interface using Jetpack Compose, displaying status text, the live proximity value, and the visual feedback image, all driven by MutableState.
+It uses **Jetpack Compose** for the UI, **SoundPool** for low-latency audio, and **Vibrator** for haptic feedback.
 
-Lifecycle Management: We used a DisposableEffect composable along with a LifecycleObserver to correctly register the sensor listener when the app resumed and unregister it when paused, ensuring efficient resource usage.
+---
+
+## Features & Behaviour
+
+- Listens to the device’s proximity sensor (Sensor.TYPE_PROXIMITY).  
+- Detects a “clap event” when the sensor transitions from a far value to near (usually 0.0 cm).  
+- Triggers feedback:
+  - Plays a short sound via **SoundPool**  
+  - Vibrates using **Vibrator**  
+  - Updates UI image / text to reflect feedback  
+- UI resets automatically after a short delay.  
+- Uses **MutableState** and **Compose** to reflect live changes.  
+- Registers and unregisters sensor listeners cleanly on lifecycle events to conserve resources.
+
+---
+
+## Architecture & Design
+
+- **Sensor Layer**: Proximity sensor, with a threshold-based transition detection logic.  
+- **Feedback Layer**: Sound + vibration + UI.  
+- **UI Layer**: Jetpack Compose views observing state.  
+- **Lifecycle Handling**: Uses `DisposableEffect` and a `LifecycleObserver` to manage sensor listener registration/unregistration.  
+
+---
+
+## How It Works (Flow)
+
+1. App starts and UI is displayed.  
+2. On resume, the proximity sensor listener is registered.  
+3. On sensor change:
+   - If value transitions from “far” to “near”, a clap is detected.  
+   - Trigger sound and vibration.  
+   - Update UI (e.g. show “clap” image/text).  
+   - After a delay, revert UI to idle state.  
+4. On pause, the sensor listener is unregistered to avoid battery drain.
+
+---
+
+## Setup & Build Instructions
+
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/ananya101001/Android-ClapApp.git
+   cd Android-ClapApp

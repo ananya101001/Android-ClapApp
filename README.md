@@ -49,6 +49,36 @@ It uses **Jetpack Compose** for the UI, **SoundPool** for low-latency audio, and
 
 ---
 
+```mermaid
+flowchart TD
+    A[User Action: Hand near phone] --> B[Proximity Sensor (TYPE_PROXIMITY)]
+    B -->|SensorManager Listener| C[Clap Detection Logic]
+    C -->|Transition Far → Near| D{Clap Detected?}
+    D -->|Yes| E[Feedback Layer]
+    D -->|No| B
+    
+    E --> F[SoundPool → Play Clap Sound]
+    E --> G[Vibrator → Trigger Vibration]
+    E --> H[UI Update via Jetpack Compose]
+    H --> I[Coroutine Delay → Reset UI]
+
+    subgraph UI
+      H
+      I
+    end
+```
+
+
+### Explanation of Flow
+- **Proximity Sensor** detects hand movement near the phone.  
+- **Clap Detection Logic** checks for a transition (far → near).  
+- If a clap is detected:
+  - **SoundPool** plays a sound.  
+  - **Vibrator** gives haptic feedback.  
+  - **UI (Jetpack Compose)** updates image/text, then resets after a short delay.  
+- Lifecycle management ensures the sensor listener is registered/unregistered properly:contentReference[oaicite:0]{index=0}.  
+
+
 ## How It Works (Flow)
 
 1. App starts and UI is displayed.  

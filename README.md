@@ -51,21 +51,22 @@ It uses **Jetpack Compose** for the UI, **SoundPool** for low-latency audio, and
 
 ```mermaid
 flowchart TD
-    A[User Action: Hand near phone] --> B[Proximity Sensor (TYPE_PROXIMITY)]
-    B -->|SensorManager Listener| C[Clap Detection Logic]
-    C -->|Transition Far → Near| D{Clap Detected?}
-    D -->|Yes| E[Feedback Layer]
+    A[User action: hand near phone] --> B[Proximity sensor - TYPE_PROXIMITY]
+    B -->|SensorManager listener| C[Clap detection logic]
+    C -->|Transition far to near| D{Clap detected?}
+    D -->|Yes| E[Feedback layer]
     D -->|No| B
-    
-    E --> F[SoundPool → Play Clap Sound]
-    E --> G[Vibrator → Trigger Vibration]
-    E --> H[UI Update via Jetpack Compose]
-    H --> I[Coroutine Delay → Reset UI]
+
+    E --> F[SoundPool: play clap sound]
+    E --> G[Vibrator: trigger vibration]
+    E --> H[UI update via Jetpack Compose]
+    H --> I[Coroutine delay then reset UI]
 
     subgraph UI
       H
       I
     end
+
 ```
 
 
